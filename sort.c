@@ -1,20 +1,132 @@
+// Oma Persaud
+// Lab 8 Assignment
+// July 16, 2023
+
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int extraMemoryAllocated;
+
+void swap(int *a, int *b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void heapify(int arr[], int n, int i)
+{
+	int largest = i;
+	int l = 2 * i + 1;
+	int r = 2 * i + 2;
+
+	if (l < n && arr[l] > arr[largest])
+	largest = l;
+	
+
+	if (r < n && arr[r] > arr[largest])
+	largest = r;
+
+	if (largest != i)
+	{
+		int temp = arr[i];
+		arr[i] = arr[largest];
+		arr[largest] = temp;
+
+		heapify(arr, n, largest);
+	}
+}
 
 // implements heap sort
 // extraMemoryAllocated counts bytes of memory allocated
 void heapSort(int arr[], int n)
 {
-}
+	extraMemoryAllocated = 0;
 
+	// builds heap and rearranges array
+	for (int i = n / 2 - 1; i >= 0; i--)
+		heapify(arr, n, i);
+
+
+	// takes out element from the heap
+	for (int i = n - 1; i >= 0; i--)
+	{
+		int temp = arr[0];
+		arr[0] = arr[i];
+		arr[i] = temp;
+	
+	heapify(arr, i, 0);
+	}
+}
 
 // implement merge sort
 // extraMemoryAllocated counts bytes of extra memory allocated
+
+void merge(int pData[], int l, int m, int r);
+
 void mergeSort(int pData[], int l, int r)
 {
+
+	int m = l + ( r - l ) / 2;
+
+	mergeSort(pData, l, m);
+	mergeSort(pData, m + l, r);
+	merge(pData, l, m, r);
+	
+}
+
+
+void merge(int pData[], int l, int m, int r)
+{
+	int i;
+	int j;
+	int k;
+	int n1 = m - l + 1;
+	int n2 = r - m;
+
+	int L[n1], R[n2];
+
+	for (i = 0; i < n1; i++)
+		L[i] = pData[l + i];
+	
+
+	for (j = 0; j < n2; j++)
+		R[j] = pData[m + 1 + j];
+	
+	i = 0;
+	j = 0;
+	k = l;
+
+	while ( i < n1 && j < n2)
+	{
+		if (L[i] <= R[j])
+		{
+			pData[k] = L[i];
+			i++;
+		}
+		else
+		{
+			pData[k] = R[j];
+			j++;
+		}
+		k++;
+	}
+
+	while (i < n1)
+	{
+		pData[k] = L[i];
+		i++;
+		k++;
+	}
+
+	while (j < n2)
+	{
+		pData[k] = R[j];
+		j++;
+		k++;
+	}
 }
 
 // parses input file to an integer array
